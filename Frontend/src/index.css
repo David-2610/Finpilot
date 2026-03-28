@@ -1,1 +1,109 @@
-@import "tailwindcss";
+/* ============================================================
+   FINPILOT — Global Styles & Design Tokens
+   ============================================================ */
+
+/* ─── CSS Custom Properties ─── */
+:root {
+  --sage:          #8fa891;
+  --mist:          #b8c9be;
+  --slate:         #6b7d8a;
+  --dusk:          #8a9db5;
+  --cream:         #f4f1eb;
+  --warm-white:    #faf8f4;
+  --charcoal:      #2c3440;
+  --soft-charcoal: #3d4a52;
+  --pale-gold:     #c9b67a;
+  --blush:         #c4a69a;
+  --fog:           #e8edf0;
+  --glass:         rgba(255, 255, 255, 0.55);
+  --glass-border:  rgba(255, 255, 255, 0.70);
+  --error:         #b97a6e;
+  --success:       #7aab8a;
+  --eth-blue:      #627eea;
+  --mm-orange:     #e2761b;
+
+  --font-heading:  'Cormorant Garamond', serif;
+  --font-body:     'DM Sans', sans-serif;
+  --font-mono:     'DM Mono', monospace;
+
+  --sidebar-width: 240px;
+  --sidebar-collapsed: 68px;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--warm-white);
+  color: var(--charcoal);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(143, 168, 145, 0.3);
+  border-radius: 100px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(143, 168, 145, 0.5);
+}
+
+/* ─── Shared Keyframes ─── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(30px, 20px) scale(1.05); }
+  100% { transform: translate(-20px, 40px) scale(0.97); }
+}
+
+@keyframes cardRise {
+  from { opacity: 0; transform: translateY(30px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes pulseDot {
+  0%, 100% { transform: scale(1);   opacity: 1;   }
+  50%      { transform: scale(1.4); opacity: 0.6; }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}

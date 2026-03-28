@@ -1,0 +1,167 @@
+/* ============================================================
+   Cards Styles — GlassCard, StatCard, AlertCard
+   ============================================================ */
+
+/* ─── GlassCard ─── */
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: all 0.35s ease;
+}
+
+.glass-card--animate {
+    animation: cardRise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.glass-card:hover {
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.07);
+    transform: translateY(-3px);
+}
+
+/* ─── StatCard ─── */
+.stat-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 22px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: all 0.35s ease;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+}
+
+.stat-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.stat-card-icon.icon-sage {
+    background: rgba(143, 168, 145, 0.12);
+}
+
+.stat-card-icon.icon-dusk {
+    background: rgba(138, 157, 181, 0.12);
+}
+
+.stat-card-icon.icon-gold {
+    background: rgba(201, 182, 122, 0.12);
+}
+
+.stat-card-icon.icon-blush {
+    background: rgba(196, 166, 154, 0.12);
+}
+
+.stat-card-value {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--charcoal);
+    line-height: 1.1;
+}
+
+.stat-card-label {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--slate);
+    margin-top: 2px;
+}
+
+/* ─── AlertCard ─── */
+.alert-card {
+    background: var(--glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-left: 3px solid var(--sage);
+    border-radius: 14px;
+    padding: 22px 24px;
+    transition: all 0.35s ease;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.04);
+}
+
+.alert-card:hover {
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.07);
+    transform: translateY(-2px);
+}
+
+.alert-card-header {
+    margin-bottom: 8px;
+}
+
+.alert-severity {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+}
+
+.alert-card-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 6px;
+}
+
+.alert-card-message {
+    font-size: 0.84rem;
+    font-weight: 300;
+    color: var(--soft-charcoal);
+    line-height: 1.65;
+    margin-bottom: 8px;
+}
+
+.alert-card-advice {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--slate);
+    line-height: 1.6;
+    padding: 10px 14px;
+    background: rgba(143, 168, 145, 0.06);
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.alert-card-advice strong {
+    color: var(--sage);
+    font-weight: 500;
+}
+
+.alert-chat-btn {
+    margin-top: 12px;
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--sage);
+    background: none;
+    border: 1px solid rgba(143, 168, 145, 0.25);
+    border-radius: 8px;
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.alert-chat-btn:hover {
+    background: rgba(143, 168, 145, 0.1);
+    border-color: var(--sage);
+    color: var(--charcoal);
+}

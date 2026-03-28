@@ -1,0 +1,792 @@
+/* ============================================================
+   FINPILOT — getstarted.css
+   Web3 / MetaMask authentication page
+   ============================================================ */
+
+   :root {
+    --sage:          #8fa891;
+    --mist:          #b8c9be;
+    --slate:         #6b7d8a;
+    --dusk:          #8a9db5;
+    --warm-white:    #faf8f4;
+    --charcoal:      #2c3440;
+    --soft-charcoal: #3d4a52;
+    --pale-gold:     #c9b67a;
+    --blush:         #c4a69a;
+    --eth-blue:      #627eea;
+    --eth-soft:      rgba(98,126,234,0.12);
+    --mm-orange:     #e2761b;
+    --mm-soft:       rgba(226,118,27,0.10);
+    --glass:         rgba(255,255,255,0.58);
+    --glass-border:  rgba(255,255,255,0.72);
+    --error:         #b97a6e;
+    --success:       #7aab8a;
+  }
+  
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--warm-white);
+    color: var(--charcoal);
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* ─── Background ─── */
+  .bg-canvas {
+    position: fixed; inset: 0; z-index: 0;
+    background: linear-gradient(135deg, #f0ede6 0%, #e8edf0 45%, #edf0e8 100%);
+    overflow: hidden;
+  }
+  
+  .bg-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: 0.3;
+    animation: drift 20s ease-in-out infinite alternate;
+  }
+  
+  .orb1 { width: 500px; height: 500px; background: radial-gradient(circle,#b8d4be,#8fa891); top:-140px; left:-100px; animation-delay:0s; }
+  .orb2 { width: 380px; height: 380px; background: radial-gradient(circle,#b5c8d6,#8a9db5); bottom:-80px; right:-80px;  animation-delay:-7s; }
+  .orb3 { width: 280px; height: 280px; background: radial-gradient(circle,#cccae0,#a59dd4); top:40%; right:25%; animation-delay:-13s; opacity:0.18; }
+  
+  @keyframes drift {
+    0%   { transform: translate(0,0) scale(1); }
+    50%  { transform: translate(28px,20px) scale(1.04); }
+    100% { transform: translate(-18px,38px) scale(0.97); }
+  }
+  
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      linear-gradient(rgba(107,125,138,0.04) 1px, transparent 1px),
+      linear-gradient(90deg,rgba(107,125,138,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  
+  /* ─── Back link ─── */
+  .back-link {
+    position: fixed;
+    top: 24px; left: 32px;
+    z-index: 100;
+    font-size: 0.78rem;
+    color: var(--slate);
+    text-decoration: none;
+    letter-spacing: 0.03em;
+    padding: 7px 16px;
+    border: 1px solid rgba(107,125,138,0.22);
+    border-radius: 100px;
+    background: var(--glass);
+    backdrop-filter: blur(14px);
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeIn 0.7s ease 0.2s both;
+  }
+  
+  .back-link:hover {
+    background: rgba(107,125,138,0.1);
+    border-color: rgba(107,125,138,0.45);
+    color: var(--charcoal);
+  }
+  
+  /* ─── Page Wrapper ─── */
+  .page-wrapper {
+    position: relative; z-index: 10;
+    display: flex;
+    width: 100%;
+    max-width: 1020px;
+    min-height: 600px;
+    margin: 60px 20px;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 28px 90px rgba(44,52,64,0.13), 0 0 0 1px rgba(255,255,255,0.6);
+    opacity: 0;
+    animation: cardRise 0.9s cubic-bezier(0.22,1,0.36,1) 0.3s both;
+  }
+  
+  @keyframes cardRise {
+    from { opacity:0; transform: translateY(30px) scale(0.98); }
+    to   { opacity:1; transform: translateY(0)    scale(1);    }
+  }
+  
+  /* ─── Info Panel (left, dark) ─── */
+  .info-panel {
+    width: 380px;
+    flex-shrink: 0;
+    background: var(--charcoal);
+    padding: 52px 44px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .info-panel::before {
+    content: '';
+    position: absolute;
+    top: -100px; left: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(143,168,145,0.15), transparent 70%);
+  }
+  
+  .info-panel::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(98,126,234,0.1), transparent 70%);
+  }
+  
+  .info-inner {
+    position: relative; z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  
+  .info-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--mist);
+    letter-spacing: 0.02em;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+  }
+  
+  .logo-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+    animation: pulseDot 2.5s ease infinite;
+  }
+  
+  @keyframes pulseDot {
+    0%,100% { transform:scale(1);   opacity:1;   }
+    50%      { transform:scale(1.4); opacity:0.6; }
+  }
+  
+  .info-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--mist);
+    line-height: 1.2;
+  }
+  
+  .info-title em {
+    font-style: italic;
+    color: rgba(184,201,190,0.85);
+  }
+  
+  .info-desc {
+    font-size: 0.82rem;
+    font-weight: 300;
+    color: rgba(184,201,190,0.55);
+    line-height: 1.7;
+  }
+  
+  /* Steps in panel */
+  .info-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .info-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  
+  .step-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--sage);
+    background: rgba(143,168,145,0.12);
+    border: 1px solid rgba(143,168,145,0.2);
+    border-radius: 6px;
+    padding: 4px 8px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  
+  .step-name {
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: rgba(184,201,190,0.85);
+    margin-bottom: 2px;
+  }
+  
+  .step-hint {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: rgba(184,201,190,0.38);
+    line-height: 1.5;
+  }
+  
+  .step-connector {
+    width: 1px;
+    height: 20px;
+    background: rgba(143,168,145,0.2);
+    margin-left: 22px;
+    margin: 6px 0 6px 22px;
+  }
+  
+  /* Trust pills */
+  .info-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(184,201,190,0.1);
+  }
+  
+  .trust-pill {
+    font-size: 0.68rem;
+    color: rgba(184,201,190,0.5);
+    border: 1px solid rgba(184,201,190,0.12);
+    border-radius: 100px;
+    padding: 4px 10px;
+    letter-spacing: 0.02em;
+  }
+  
+  /* ─── Auth Card (right) ─── */
+  .auth-card {
+    flex: 1;
+    background: var(--glass);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    padding: 52px 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+  }
+  
+  .card-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mm-orange);
+    margin-bottom: 10px;
+  }
+  
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.1rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  
+  .card-sub {
+    font-size: 0.83rem;
+    font-weight: 300;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  
+  .divider-line {
+    height: 1px;
+    background: linear-gradient(90deg, rgba(143,168,145,0.3), transparent);
+    margin-bottom: 24px;
+  }
+  
+  /* ─── Step tracker ─── */
+  .step-track {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 36px;
+  }
+  
+  .track-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .track-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(107,125,138,0.2);
+    border: 2px solid rgba(107,125,138,0.25);
+    transition: all 0.4s ease;
+  }
+  
+  .track-step span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(107,125,138,0.4);
+    transition: color 0.4s ease;
+  }
+  
+  .track-step.active .track-dot {
+    background: var(--sage);
+    border-color: var(--sage);
+    box-shadow: 0 0 0 4px rgba(143,168,145,0.15);
+  }
+  
+  .track-step.active span { color: var(--sage); }
+  
+  .track-step.done .track-dot {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+  
+  .track-step.done span { color: var(--soft-charcoal); }
+  
+  .track-bar {
+    flex: 1;
+    height: 1px;
+    background: rgba(107,125,138,0.18);
+    margin: 0 6px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .track-bar::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--sage);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+  }
+  
+  .track-bar.filled::after { transform: scaleX(1); }
+  
+  /* ─── Auth states ─── */
+  .auth-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+    transition: opacity 0.3s ease;
+  }
+  
+  .auth-state.hidden {
+    display: none;
+  }
+  
+  /* MetaMask fox */
+  .metamask-icon-wrap {
+    position: relative;
+    width: 90px; height: 90px;
+    margin-bottom: 6px;
+  }
+  
+  .metamask-fox {
+    width: 90px; height: 90px;
+    position: relative; z-index: 2;
+    animation: foxFloat 4s ease-in-out infinite;
+  }
+  
+  .fox-fallback {
+    display: none;
+    font-size: 3.5rem;
+    width: 90px; height: 90px;
+    align-items: center;
+    justify-content: center;
+    position: relative; z-index: 2;
+    animation: foxFloat 4s ease-in-out infinite;
+  }
+  
+  @keyframes foxFloat {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-8px); }
+  }
+  
+  .fox-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(226,118,27,0.2);
+    animation: ringPulse 3s ease-in-out infinite;
+  }
+  
+  .ring2 {
+    inset: -18px;
+    border-color: rgba(226,118,27,0.1);
+    animation-delay: -1.5s;
+  }
+  
+  @keyframes ringPulse {
+    0%,100% { transform: scale(1);    opacity: 1; }
+    50%      { transform: scale(1.06); opacity: 0.5; }
+  }
+  
+  .auth-instruction {
+    font-size: 0.84rem;
+    font-weight: 300;
+    color: var(--soft-charcoal);
+    line-height: 1.65;
+    max-width: 320px;
+  }
+  
+  .auth-instruction span {
+    font-size: 0.75rem;
+    color: var(--slate);
+  }
+  
+  /* Connect button */
+  .btn-connect {
+    width: 100%;
+    max-width: 320px;
+    padding: 13px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #fff;
+    background: var(--mm-orange);
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 20px rgba(226,118,27,0.22);
+  }
+  
+  .btn-connect::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #f0861e, #d4600e);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  
+  .btn-connect:hover::before { opacity: 1; }
+  .btn-connect:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(226,118,27,0.3); }
+  .btn-connect:active { transform: translateY(0); }
+  
+  .btn-connect .btn-icon,
+  .btn-connect .btn-text,
+  .btn-connect .btn-arrow { position: relative; z-index: 1; }
+  
+  .btn-arrow { margin-left: auto; opacity: 0.7; }
+  
+  /* WalletConnect button */
+  .btn-walletconnect {
+    width: 100%;
+    max-width: 320px;
+    padding: 11px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--slate);
+    background: transparent;
+    border: 1px solid rgba(107,125,138,0.25);
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-walletconnect:hover {
+    background: rgba(107,125,138,0.07);
+    border-color: rgba(107,125,138,0.45);
+    color: var(--charcoal);
+  }
+  
+  /* No MetaMask message */
+  .no-metamask {
+    font-size: 0.78rem;
+    color: var(--error);
+  }
+  
+  .no-metamask a {
+    color: var(--mm-orange);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  .no-metamask a:hover { text-decoration: underline; }
+  
+  /* ─── Spinner (Ethereum diamond) ─── */
+  .spinner-wrap {
+    margin-bottom: 6px;
+  }
+  
+  .eth-spinner {
+    width: 64px; height: 64px;
+    position: relative;
+    animation: ethSpin 1.8s linear infinite;
+  }
+  
+  @keyframes ethSpin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .eth-diamond {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--eth-blue), #4a6bd4);
+    transform: rotate(45deg);
+    margin: 14px auto;
+    border-radius: 4px;
+    opacity: 0.85;
+  }
+  
+  /* Sign animation */
+  .sign-animation {
+    position: relative;
+    width: 70px; height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sign-circle {
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: var(--sage);
+    border-right-color: rgba(143,168,145,0.3);
+    animation: spin 1.2s linear infinite;
+  }
+  
+  @keyframes spin { to { transform: rotate(360deg); } }
+  
+  .sign-icon {
+    font-size: 1.6rem;
+    position: relative; z-index: 1;
+  }
+  
+  /* Wallet address box */
+  .wallet-address-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    background: rgba(255,255,255,0.5);
+    border: 1px solid var(--glass-border);
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+  
+  .address-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+  }
+  
+  .address-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--charcoal);
+    letter-spacing: 0.04em;
+  }
+  
+  /* State labels */
+  .state-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    color: var(--charcoal);
+  }
+  
+  .state-hint {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: var(--slate);
+    max-width: 280px;
+    line-height: 1.6;
+  }
+  
+  /* Sign button */
+  .btn-sign {
+    width: 100%;
+    max-width: 280px;
+    padding: 12px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    color: #fff;
+    background: var(--charcoal);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.35s ease;
+    box-shadow: 0 4px 18px rgba(44,52,64,0.18);
+  }
+  
+  .btn-sign::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--sage), var(--eth-blue));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  
+  .btn-sign:hover::before { opacity: 1; }
+  .btn-sign:hover { transform: translateY(-1px); }
+  
+  .btn-sign .btn-text { position: relative; z-index: 1; }
+  
+  .btn-loader-sign {
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    display: none;
+    position: relative; z-index: 1;
+    animation: spin 0.7s linear infinite;
+  }
+  
+  .btn-sign.loading .btn-loader-sign { display: block; }
+  .btn-sign.loading .btn-text { opacity: 0.6; }
+  
+  /* Cancel button */
+  .btn-cancel {
+    font-size: 0.75rem;
+    color: var(--slate);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+  }
+  
+  .btn-cancel:hover { opacity: 1; }
+  
+  /* ─── Success state ─── */
+  .success-wrap {
+    position: relative;
+    width: 80px; height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .success-circle {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(122,171,138,0.15);
+    border: 2px solid var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: successPop 0.5s cubic-bezier(0.22,1,0.36,1) both;
+    position: relative; z-index: 1;
+  }
+  
+  @keyframes successPop {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  
+  .success-check {
+    font-size: 1.4rem;
+    color: var(--success);
+  }
+  
+  .s-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(122,171,138,0.25);
+    animation: successRing 1.2s ease-out infinite;
+  }
+  
+  .sr1 { inset: -8px;  animation-delay: 0s; }
+  .sr2 { inset: -18px; animation-delay: -0.6s; }
+  
+  @keyframes successRing {
+    0%   { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1.4); opacity: 0;   }
+  }
+  
+  .success-text { color: var(--success) !important; }
+  
+  /* Progress bar */
+  .progress-wrap {
+    width: 200px;
+    height: 2px;
+    background: rgba(122,171,138,0.2);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--sage), var(--dusk));
+    border-radius: 100px;
+    transition: width 0.08s linear;
+  }
+  
+  /* ─── Error state ─── */
+  .error-icon {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    background: rgba(185,122,110,0.1);
+    border: 2px solid var(--error);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--error);
+  }
+  
+  .error-text { color: var(--error) !important; }
+  
+  /* ─── Card footer note ─── */
+  .card-footer-note {
+    margin-top: 28px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(107,125,138,0.4);
+    text-align: center;
+  }
+  
+  /* ─── Keyframes ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  
+  /* ─── Responsive ─── */
+  @media (max-width: 760px) {
+    .info-panel  { display: none; }
+    .auth-card   { padding: 40px 28px; }
+    .page-wrapper { margin: 20px 16px; border-radius: 20px; min-height: auto; }
+    .back-link   { top: 14px; left: 16px; }
+  }

@@ -1,0 +1,232 @@
+/* ============================================================
+   Sidebar Styles — floating glassmorphism nav
+   ============================================================ */
+
+.sidebar {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    bottom: 20px;
+    width: var(--sidebar-width);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 16px;
+    background: var(--glass);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.06);
+    animation: cardRise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ─── Logo ─── */
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    margin-bottom: 32px;
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.02em;
+}
+
+.sidebar-logo-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--sage);
+    animation: pulseDot 2.5s ease infinite;
+}
+
+/* ─── Nav Links ─── */
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--soft-charcoal);
+    transition: all 0.25s ease;
+    text-decoration: none;
+}
+
+.sidebar-link:hover {
+    background: rgba(143, 168, 145, 0.1);
+    color: var(--charcoal);
+}
+
+.sidebar-link--active {
+    background: rgba(143, 168, 145, 0.15);
+    color: var(--charcoal);
+    font-weight: 500;
+}
+
+.sidebar-link--active .sidebar-link-icon {
+    transform: scale(1.1);
+}
+
+.sidebar-link-icon {
+    font-size: 1.1rem;
+    width: 24px;
+    text-align: center;
+    transition: transform 0.25s ease;
+}
+
+.sidebar-link-label {
+    letter-spacing: 0.02em;
+}
+
+/* ─── Footer / Wallet ─── */
+.sidebar-footer {
+    padding-top: 16px;
+    border-top: 1px solid rgba(143, 168, 145, 0.15);
+}
+
+.sidebar-wallet {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wallet-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+}
+
+.wallet-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px rgba(122, 171, 138, 0.4);
+}
+
+.wallet-addr {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--soft-charcoal);
+    letter-spacing: 0.04em;
+}
+
+.sidebar-logout {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    color: var(--slate);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    padding: 4px 12px;
+    transition: color 0.2s ease;
+}
+
+.sidebar-logout:hover {
+    color: var(--error);
+}
+
+.sidebar-connect {
+    width: 100%;
+    padding: 10px 16px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--charcoal);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.04em;
+}
+
+.sidebar-connect:hover {
+    background: var(--sage);
+    transform: translateY(-1px);
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .sidebar {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        align-items: center;
+        border-radius: 20px 20px 0 0;
+        padding: 10px 16px;
+        gap: 0;
+    }
+
+    .sidebar-logo {
+        margin-bottom: 0;
+        padding: 4px 8px;
+    }
+
+    .sidebar-logo span {
+        display: none;
+    }
+
+    .sidebar-nav {
+        flex-direction: row;
+        flex: 1;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .sidebar-link {
+        flex-direction: column;
+        gap: 2px;
+        padding: 6px 12px;
+        font-size: 0.65rem;
+    }
+
+    .sidebar-link-icon {
+        font-size: 1.2rem;
+    }
+
+    .sidebar-footer {
+        border-top: none;
+        border-left: 1px solid rgba(143, 168, 145, 0.15);
+        padding-top: 0;
+        padding-left: 12px;
+    }
+
+    .sidebar-wallet {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .wallet-status {
+        padding: 4px 6px;
+    }
+
+    .sidebar-logout {
+        padding: 4px 6px;
+        font-size: 0.65rem;
+    }
+
+    .sidebar-connect {
+        padding: 8px 12px;
+        font-size: 0.72rem;
+    }
+}

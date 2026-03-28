@@ -1,0 +1,217 @@
+/* ============================================================
+   AlertsPage Styles
+   ============================================================ */
+
+.alerts-page {
+    max-width: 900px;
+}
+
+/* Header */
+.alerts-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.alerts-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 8px;
+}
+
+.alerts-title {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.15;
+}
+
+.alerts-title em {
+    color: var(--sage);
+    font-weight: 400;
+}
+
+.alerts-summary-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.alerts-pill {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.06em;
+    padding: 5px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--glass-border);
+    background: var(--glass);
+}
+
+.alerts-pill--critical {
+    color: var(--blush);
+    border-color: rgba(196, 166, 154, 0.3);
+}
+
+.alerts-pill--warning {
+    color: var(--pale-gold);
+    border-color: rgba(201, 182, 122, 0.3);
+}
+
+.alerts-pill--info {
+    color: var(--sage);
+    border-color: rgba(143, 168, 145, 0.3);
+}
+
+/* Groups */
+.alerts-group {
+    margin-bottom: 32px;
+}
+
+.alerts-group-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-bottom: 16px;
+}
+
+.alerts-group--critical {
+    color: var(--blush);
+}
+
+.alerts-group--warning {
+    color: var(--pale-gold);
+}
+
+.alerts-group--info {
+    color: var(--sage);
+}
+
+.alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+/* No alerts */
+.alerts-none {
+    padding: 48px !important;
+    text-align: center;
+}
+
+.alerts-none-icon {
+    font-size: 2.5rem;
+    margin-bottom: 12px;
+}
+
+.alerts-none-title {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--sage);
+    margin-bottom: 8px;
+}
+
+.alerts-none-desc {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--slate);
+}
+
+/* Summary card */
+.alerts-summary-card {
+    margin-top: 16px;
+    padding: 28px !important;
+}
+
+.alerts-summary-title {
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    margin-bottom: 20px;
+}
+
+.alerts-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.alerts-summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+}
+
+.alerts-summary-num {
+    font-family: var(--font-heading);
+    font-size: 1.6rem;
+    font-weight: 300;
+    color: var(--charcoal);
+}
+
+.alerts-summary-label {
+    font-size: 0.72rem;
+    font-weight: 300;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Empty state */
+.alerts-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    text-align: center;
+    gap: 16px;
+}
+
+.alerts-empty-icon {
+    font-size: 3rem;
+    margin-bottom: 8px;
+}
+
+.alerts-empty-title {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--charcoal);
+}
+
+.alerts-empty-desc {
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--slate);
+    max-width: 360px;
+    line-height: 1.6;
+}
+
+.alerts-empty-btn {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: #fff;
+    background: var(--charcoal);
+    border: none;
+    border-radius: 100px;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.35s ease;
+    margin-top: 8px;
+}
+
+.alerts-empty-btn:hover {
+    background: var(--sage);
+    transform: translateY(-2px);
+}

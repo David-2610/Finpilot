@@ -1,0 +1,168 @@
+/* ============================================================
+   Common Styles — Button, Loader
+   ============================================================ */
+
+/* ─── Button ─── */
+.fp-btn {
+    font-family: var(--font-body);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.35s ease;
+}
+
+.fp-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Primary */
+.fp-btn--primary {
+    padding: 14px 36px;
+    color: #fff;
+    background: var(--charcoal);
+    box-shadow: 0 4px 24px rgba(44, 52, 64, 0.18);
+}
+
+.fp-btn--primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--sage), var(--dusk));
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+.fp-btn--primary:hover:not(:disabled)::before {
+    opacity: 1;
+}
+
+.fp-btn--primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(44, 52, 64, 0.25);
+}
+
+/* Secondary */
+.fp-btn--secondary {
+    padding: 12px 28px;
+    color: var(--slate);
+    background: transparent;
+    border: 1px solid rgba(107, 125, 138, 0.25);
+}
+
+.fp-btn--secondary:hover:not(:disabled) {
+    background: rgba(107, 125, 138, 0.08);
+    border-color: rgba(107, 125, 138, 0.5);
+    color: var(--charcoal);
+}
+
+/* Ghost */
+.fp-btn--ghost {
+    padding: 10px 20px;
+    color: var(--sage);
+    background: transparent;
+    letter-spacing: 0.03em;
+    text-transform: none;
+    font-weight: 400;
+}
+
+.fp-btn--ghost:hover:not(:disabled) {
+    background: rgba(143, 168, 145, 0.08);
+}
+
+.fp-btn-text {
+    position: relative;
+    z-index: 1;
+}
+
+.fp-btn--loading .fp-btn-text {
+    opacity: 0.6;
+}
+
+.fp-btn-loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    position: relative;
+    z-index: 1;
+    animation: spin 0.7s linear infinite;
+}
+
+/* ─── Loader ─── */
+.fp-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 40px;
+}
+
+.fp-loader-ring {
+    position: relative;
+    width: 80px;
+    height: 80px;
+}
+
+.fp-loader-svg {
+    position: absolute;
+    inset: 0;
+    animation: spin 2.4s linear infinite;
+}
+
+.fp-loader-svg circle {
+    fill: none;
+    stroke: var(--sage);
+    stroke-width: 1.5;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 150;
+    stroke-linecap: round;
+}
+
+.fp-loader-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    letter-spacing: 0.02em;
+}
+
+.fp-loader-progress {
+    width: 200px;
+    height: 2px;
+    background: rgba(143, 168, 145, 0.2);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.fp-loader-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--sage), var(--dusk));
+    border-radius: 100px;
+    transition: width 0.3s ease;
+}
+
+.fp-loader-text {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--slate);
+}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FinPilot – Get Started</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/getstarted.css">
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-canvas">
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+    <div class="bg-orb orb3"></div>
+  </div>
+  <div class="bg-grid"></div>
+
+  <!-- Back link -->
+  <a href="index.html" class="back-link">&#8592; Back to home</a>
+
+  <!-- Main layout -->
+  <main class="page-wrapper">
+
+    <!-- LEFT: Info panel -->
+    <aside class="info-panel">
+      <div class="info-inner">
+
+        <div class="info-logo">
+          <div class="logo-dot"></div>
+          FinPilot
+        </div>
+
+        <h1 class="info-title">Your wallet.<br><em>Your identity.</em></h1>
+        <p class="info-desc">
+          FinPilot uses Ethereum & MetaMask for zero-password, cryptographically secure login.
+          No email. No data stored. Just your wallet signature.
+        </p>
+
+        <div class="info-steps">
+          <div class="info-step">
+            <div class="step-badge">01</div>
+            <div>
+              <p class="step-name">Connect Wallet</p>
+              <p class="step-hint">Approve the MetaMask connection request</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="info-step">
+            <div class="step-badge">02</div>
+            <div>
+              <p class="step-name">Sign Message</p>
+              <p class="step-hint">A one-time signature — no gas fee, no transaction</p>
+            </div>
+          </div>
+          <div class="step-connector"></div>
+          <div class="info-step">
+            <div class="step-badge">03</div>
+            <div>
+              <p class="step-name">Enter FinPilot</p>
+              <p class="step-hint">You're authenticated — wallet address is your account</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-trust">
+          <span class="trust-pill">🔒 Non-custodial</span>
+          <span class="trust-pill">⛓ On-chain identity</span>
+          <span class="trust-pill">✓ No passwords</span>
+        </div>
+
+      </div>
+    </aside>
+
+    <!-- RIGHT: Auth card -->
+    <section class="auth-card">
+
+      <p class="card-eyebrow">Fresh sign-in required</p>
+      <h2 class="card-title">Connect to continue</h2>
+      <p class="card-sub">Authenticate with your Ethereum wallet to access your financial dashboard</p>
+
+      <div class="divider-line"></div>
+
+      <!-- Step indicator -->
+      <div class="step-track">
+        <div class="track-step active" id="trackStep1">
+          <div class="track-dot"></div>
+          <span>Connect</span>
+        </div>
+        <div class="track-bar" id="trackBar1"></div>
+        <div class="track-step" id="trackStep2">
+          <div class="track-dot"></div>
+          <span>Sign</span>
+        </div>
+        <div class="track-bar" id="trackBar2"></div>
+        <div class="track-step" id="trackStep3">
+          <div class="track-dot"></div>
+          <span>Enter</span>
+        </div>
+      </div>
+
+      <!-- State: default -->
+      <div class="auth-state" id="stateDefault">
+        <div class="metamask-icon-wrap">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg"
+            alt="MetaMask"
+            class="metamask-fox"
+            onerror="this.style.display='none'; document.getElementById('foxFallback').style.display='flex';"
+          />
+          <div class="fox-fallback" id="foxFallback">🦊</div>
+          <div class="fox-ring"></div>
+          <div class="fox-ring ring2"></div>
+        </div>
+
+        <p class="auth-instruction">
+          Click below to connect your MetaMask wallet.<br>
+          <span>A signature request will follow — it costs no gas.</span>
+        </p>
+
+        <button class="btn-connect" id="btnConnect">
+          <span class="btn-icon">🦊</span>
+          <span class="btn-text">Connect with MetaMask</span>
+          <span class="btn-arrow">→</span>
+        </button>
+
+        <button class="btn-walletconnect" id="btnWalletConnect">
+          <span class="btn-icon">⬡</span>
+          <span class="btn-text">Other Wallet (WalletConnect)</span>
+        </button>
+
+        <p class="no-metamask" id="noMetaMask" style="display:none">
+          MetaMask not detected.
+          <a href="https://metamask.io/download/" target="_blank" rel="noopener">Install MetaMask →</a>
+        </p>
+      </div>
+
+      <!-- State: connecting -->
+      <div class="auth-state hidden" id="stateConnecting">
+        <div class="spinner-wrap">
+          <div class="eth-spinner">
+            <div class="eth-diamond"></div>
+          </div>
+        </div>
+        <p class="state-label">Waiting for MetaMask…</p>
+        <p class="state-hint">Check the MetaMask popup in your browser extension</p>
+        <button class="btn-cancel" id="btnCancelConnect">Cancel</button>
+      </div>
+
+      <!-- State: signing -->
+      <div class="auth-state hidden" id="stateSigning">
+        <div class="spinner-wrap">
+          <div class="sign-animation">
+            <div class="sign-circle"></div>
+            <span class="sign-icon">✍</span>
+          </div>
+        </div>
+        <div class="wallet-address-box" id="walletAddressBox">
+          <span class="address-label">Connected as</span>
+          <span class="address-value" id="displayAddress">0x…</span>
+        </div>
+        <p class="state-label">Sign to authenticate</p>
+        <p class="state-hint">Approve the signature in MetaMask — no gas, no transaction</p>
+        <button class="btn-sign" id="btnSign">
+          <span class="btn-text">Sign Message</span>
+          <span class="btn-loader-sign" id="signLoader"></span>
+        </button>
+        <button class="btn-cancel" id="btnCancelSign">Disconnect</button>
+      </div>
+
+      <!-- State: success -->
+      <div class="auth-state hidden" id="stateSuccess">
+        <div class="success-wrap">
+          <div class="success-circle">
+            <span class="success-check">✓</span>
+          </div>
+          <div class="success-rings">
+            <div class="s-ring sr1"></div>
+            <div class="s-ring sr2"></div>
+          </div>
+        </div>
+        <p class="state-label success-text">Authenticated!</p>
+        <p class="state-hint">Identity verified on Ethereum. Entering FinPilot…</p>
+        <div class="progress-wrap">
+          <div class="progress-bar" id="successBar"></div>
+        </div>
+      </div>
+
+      <!-- State: error -->
+      <div class="auth-state hidden" id="stateError">
+        <div class="error-icon">✕</div>
+        <p class="state-label error-text" id="errorMessage">Something went wrong</p>
+        <p class="state-hint" id="errorHint">Please try again</p>
+        <button class="btn-connect" id="btnRetry">
+          <span class="btn-icon">↺</span>
+          <span class="btn-text">Try Again</span>
+        </button>
+      </div>
+
+      <div class="card-footer-note">
+        Powered by Ethereum · MetaMask · EIP-4361 Sign-In
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ethers.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.1/ethers.umd.min.js"></script>
+  <script src="/js/getstarted.js"></script>
+</body>
+</html>

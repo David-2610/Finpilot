@@ -1,0 +1,75 @@
+/* ============================================================
+   Charts Styles
+   ============================================================ */
+
+.spending-bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.spending-bar-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 80px;
+    align-items: center;
+    gap: 14px;
+}
+
+.spending-bar-label {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--soft-charcoal);
+    text-transform: capitalize;
+    text-align: right;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.spending-bar-track {
+    height: 10px;
+    background: rgba(143, 168, 145, 0.08);
+    border-radius: 100px;
+    overflow: hidden;
+}
+
+.spending-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    width: 0;
+    animation: barGrow 0.8s ease-out forwards;
+}
+
+@keyframes barGrow {
+    to {
+        width: var(--target-width, 100%);
+    }
+}
+
+.spending-bar-amount {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--charcoal);
+    text-align: right;
+    font-weight: 400;
+}
+
+.spending-bar-empty {
+    text-align: center;
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--slate);
+    padding: 40px 20px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .spending-bar-row {
+        grid-template-columns: 80px 1fr 60px;
+        gap: 8px;
+    }
+
+    .spending-bar-label {
+        font-size: 0.72rem;
+    }
+}
