@@ -1,14 +1,16 @@
 {
   "name": "finpilot-backend",
   "version": "1.0.0",
+  "description": "AI Financial Assistant Backend - Web3 Auth, IPFS, Gemini AI, TTS, CertifyX",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["fintech", "ai", "web3", "ipfs", "gemini"],
+  "author": "FinPilot Team",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "axios": "^1.14.0",
     "cors": "^2.8.6",
