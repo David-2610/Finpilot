@@ -71,7 +71,7 @@ const getTransactions = async (req, res) => {
 
 const updateTransaction = async (req, res) => {
   try {
-    const { categoryId, isAutoCategorized } = req.body;
+    const { categoryId, subcategoryId } = req.body;
     const transaction = await Transaction.findById(req.params.id);
 
     if (!transaction) {
@@ -82,13 +82,35 @@ const updateTransaction = async (req, res) => {
       return res.status(401).json({ message: 'Not authorized' });
     }
 
+    // 1. Update the target transaction
     transaction.categoryId = categoryId || transaction.categoryId;
-    if (typeof isAutoCategorized !== 'undefined') {
-       transaction.isAutoCategorized = isAutoCategorized;
+    transaction.subcategoryId = subcategoryId || transaction.subcategoryId;
+    transaction.isAutoCategorized = false; // User manual override
+    const updatedTxn = await transaction.save();
+
+    // 2. SMART BULK UPDATE:
+    // Apply this category change to ALL future and existing transactions 
+    // from the same vendor/details for this user.
+    if (categoryId && transaction.details) {
+      await Transaction.updateMany(
+        { 
+          userId: req.user._id, 
+          details: transaction.details 
+        },
+        { 
+          $set: { 
+            categoryId: categoryId,
+            subcategoryId: subcategoryId || null,
+            isAutoCategorized: false 
+          } 
+        }
+      );
     }
 
-    const updatedTxn = await transaction.save();
-    res.json(updatedTxn);
+    res.json({
+      message: 'Transaction updated and vendor preference applied globally',
+      data: updatedTxn
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
