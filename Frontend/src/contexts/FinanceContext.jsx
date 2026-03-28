@@ -78,13 +78,57 @@ export function FinanceProvider({ children }) {
     const fetchAIInsights = useCallback(async (summaryData) => {
         try {
             const data = await api.getAIInsights(summaryData || summary);
-            setAiInsight(data.advice || '');
-            return data.advice;
+            const advice = data.advice || '';
+            
+            // Auto-speak on first arrival
+            if (advice) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(advice);
+                utterance.rate = 1.1;
+                window.speechSynthesis.speak(utterance);
+            }
+
+            setAiInsight(advice);
+            return advice;
         } catch (err) {
             console.error('Failed to fetch AI insights:', err);
             throw err;
         }
     }, [summary]);
+
+    /* ── Universal Chat (Text or Voice) ── */
+    const fetchChat = useCallback(async (prompt, audioBlob) => {
+        try {
+            const data = await api.sendUniversalChat(prompt, audioBlob);
+            
+            // USE BROWSER NATIVE TTS (No Sign-in, No Cost, Stops properly)
+            if (data.text) {
+                // 1. Stop any currently playing speech
+                window.speechSynthesis.cancel();
+
+                // 2. Start new speech
+                const utterance = new SpeechSynthesisUtterance(data.text);
+                
+                // Configure voice properties
+                utterance.pitch = 1.0;
+                utterance.rate = 1.1; // Slightly faster for natural flow
+                utterance.volume = 1.0;
+                
+                // Optional: Pick a better voice if available
+                const voices = window.speechSynthesis.getVoices();
+                const preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
+                if (preferredVoice) utterance.voice = preferredVoice;
+
+                window.speechSynthesis.speak(utterance);
+            }
+
+            setAiInsight(data.text || '');
+            return data;
+        } catch (err) {
+            console.error('Chat failed:', err);
+            throw err;
+        }
+    }, []);
 
     /* ── Load all dashboard data ── */
     const loadDashboardData = useCallback(async () => {
@@ -127,6 +171,7 @@ export function FinanceProvider({ children }) {
         fetchCategories,
         uploadCSV,
         fetchAIInsights,
+        fetchChat,
         loadDashboardData,
         clearData,
     };

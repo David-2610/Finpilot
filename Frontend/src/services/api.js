@@ -68,6 +68,16 @@ export const deleteCategory = (id) =>
 export const getSummary = () =>
     client.get('/api/summary').then((r) => r.data);
 
-/* ─── AI Insights ─── */
+/* ─── AI Insights & Voice Chat ─── */
 export const getAIInsights = (summaryData) =>
     client.post('/api/ai/insights', summaryData).then((r) => r.data);
+
+export const sendUniversalChat = (prompt, audioBlob) => {
+    const formData = new FormData();
+    if (prompt) formData.append('prompt', prompt);
+    if (audioBlob) formData.append('audio', audioBlob, 'voice_prompt.wav');
+    
+    return client.post('/api/ai/chat', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    }).then((r) => r.data);
+};

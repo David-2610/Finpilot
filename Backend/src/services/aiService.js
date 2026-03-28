@@ -90,4 +90,46 @@ const processAudioChat = async (audioBuffer, mimeType, summaryData) => {
   }
 };
 
-module.exports = { getFinancialInsights, processAudioChat };
+const processUniversalChat = async (prompt, audioBuffer, mimeType, summaryData) => {
+  try {
+    const systemPrompt = `
+      You are Finpilot, a professional senior financial advisor.
+      
+      FINANCIAL CONTEXT:
+      - Total Income: ₹${summaryData.totalIncome}
+      - Total Expenses: ₹${summaryData.totalExpenses}
+      - Category Breakdown: ${JSON.stringify(summaryData.categoryBreakdown)}
+
+      INSTRUCTIONS:
+      1. Use the financial context above to provide specific, data-driven advice.
+      2. If the user provides a text prompt, answer it.
+      3. If the user provides audio, listen and respond to the speech.
+      4. Keep responses concise (under 75 words) and highly actionable.
+    `;
+
+    const parts = [{ text: systemPrompt }];
+    if (prompt) parts.push({ text: `User Message: ${prompt}` });
+    
+    if (audioBuffer) {
+      parts.push({
+        inline_data: {
+          mime_type: mimeType,
+          data: audioBuffer.toString('base64')
+        }
+      });
+    }
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      { contents: [{ parts }] },
+      { headers: { 'Content-Type': 'application/json' } }
+    );
+
+    return response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process your request.";
+  } catch (error) {
+    console.error('Gemini Chat Error:', error.response?.data || error.message);
+    throw new Error('Chat processing failed');
+  }
+};
+
+module.exports = { getFinancialInsights, processAudioChat, processUniversalChat };
