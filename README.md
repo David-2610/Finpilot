@@ -1,0 +1,2 @@
+# Finpilot
+Autonomous Finance Agent
