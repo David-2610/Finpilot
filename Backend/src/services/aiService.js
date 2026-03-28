@@ -34,4 +34,60 @@ const getFinancialInsights = async (summaryData) => {
   }
 };
 
-module.exports = { getFinancialInsights };
+/**
+ * Send voice prompt (audio buffer) + summary context to Gemini
+ * Get wisdom back as text
+ */
+const processAudioChat = async (audioBuffer, mimeType, summaryData) => {
+  try {
+    const promptText = `
+      You are Finpilot, a professional but friendly senior financial advisor. 
+      The user is speaking to you directly via voice. 
+      
+      CRITICAL INSTRUCTIONS:
+      1. Analyze the user's voice prompt alongside their financial summary below.
+      2. Provide a concise, highly actionable response under 60 words.
+      3. Focus on specific saving strategies based on their high-spending categories.
+      4. Always sound encouraging but firm about financial discipline.
+
+      --- USER FINANCIAL DATA ---
+      Total Income: ${summaryData.totalIncome}
+      Total Expenses: ${summaryData.totalExpenses}
+      Monthly Category Breakdown: ${JSON.stringify(summaryData.categoryBreakdown)}
+      --- END OF DATA ---
+      
+      Now, listen carefully to the user's audio and respond.
+    `;
+
+    const audioBase64 = audioBuffer.toString('base64');
+
+    const response = await axios.post(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        contents: [
+          {
+            parts: [
+              { text: promptText },
+              {
+                inline_data: {
+                  mime_type: mimeType,
+                  data: audioBase64
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+
+    return response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "I'm sorry, I couldn't process your question.";
+  } catch (error) {
+    console.error('Gemini Audio Error:', error.response?.data || error.message);
+    throw new Error('Gemini failed to process audio');
+  }
+};
+
+module.exports = { getFinancialInsights, processAudioChat };

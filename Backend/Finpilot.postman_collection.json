@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "cdef1234-abcd-5678-ef90-1234567890ab",
 		"name": "Finpilot API",
-		"description": "Complete backend API collection for Finpilot",
+		"description": "Complete backend API collection for Finpilot with AI Voice Chat",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -253,7 +253,7 @@
 			]
 		},
 		{
-			"name": "Summary & AI Logs",
+			"name": "Summary & AI Voice Chat",
 			"item": [
 				{
 					"name": "Get Summary",
@@ -308,6 +308,41 @@
 								"api",
 								"ai",
 								"insights"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Voice Chat",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "audio",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/ai/voice-chat",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"ai",
+								"voice-chat"
 							]
 						}
 					},
