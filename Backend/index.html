@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FinPilot Web3 Demo</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+</head>
+
+<body style="font-family: Arial; padding: 20px; background: #0f172a; color: white;">
+
+  <h2>🚀 FinPilot - AI Financial Assistant</h2>
+
+  <!-- WALLET -->
+  <button onclick="connectWallet()">🔗 Connect Wallet</button>
+  <button onclick="signMessage()">✍️ Sign & Login</button>
+  <p id="wallet"></p>
+
+  <hr>
+
+  <!-- TRANSACTIONS INPUT -->
+  <h3>💳 Enter Transactions</h3>
+  <textarea id="transactions" rows="6" cols="60">
+[
+  {"name": "Swiggy", "amount": 5000},
+  {"name": "Netflix", "amount": 1200},
+  {"name": "Uber", "amount": 800}
+]
+  </textarea>
+
+  <br><br>
+  <button onclick="processData()">📊 Analyze</button>
+
+  <hr>
+
+  <!-- CHAT -->
+  <h3>🤖 Ask AI</h3>
+  <input type="text" id="chatInput" placeholder="Ask something..." style="width:300px;">
+  <button onclick="sendMessage()">Send</button>
+
+  <pre id="chatOutput"></pre>
+
+  <hr>
+
+  <!-- OUTPUT -->
+  <h3>📈 Results</h3>
+  <pre id="output"></pre>
+
+<script>
+let walletAddress = "";
+let latestData = {};
+let latestAlerts = [];
+
+// 🔗 CONNECT WALLET
+async function connectWallet() {
+  if (!window.ethereum) {
+    alert("Install MetaMask!");
+    return;
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const accounts = await provider.send("eth_requestAccounts", []);
+
+  walletAddress = accounts[0];
+  document.getElementById("wallet").innerText = "Connected: " + walletAddress;
+}
+
+// ✍️ SIGN MESSAGE (AUTH)
+async function signMessage() {
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  const signer = await provider.getSigner();
+
+  const res = await fetch("http://localhost:5000/auth/message");
+  const data = await res.json();
+
+  const message = data.message;
+
+  const signature = await signer.signMessage(message);
+
+  const verifyRes = await fetch("http://localhost:5000/auth/verify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      address: walletAddress,
+      signature,
+      message
+    })
+  });
+
+  const verifyData = await verifyRes.json();
+
+  if (verifyData.success) {
+    alert("✅ Login Successful");
+  } else {
+    alert("❌ Verification Failed");
+  }
+}
+
+// 📊 PROCESS DATA (IPFS + ANALYZE)
+async function processData() {
+  if (!walletAddress) {
+    alert("Connect wallet first");
+    return;
+  }
+
+  const transactions = JSON.parse(document.getElementById("transactions").value);
+
+  const res = await fetch("http://localhost:5000/process", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      wallet: walletAddress,
+      transactions
+    })
+  });
+
+  const data = await res.json();
+
+  latestData = data.totals;
+  latestAlerts = data.alerts;
+
+  document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+}
+
+// 🤖 CHATBOT
+async function sendMessage() {
+  const message = document.getElementById("chatInput").value;
+
+  const res = await fetch("http://localhost:5000/chat", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message,
+      data: latestData,
+      alerts: latestAlerts
+    })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("chatOutput").innerText = "AI: " + data.reply;
+}
+</script>
+
+</body>
+</html>
