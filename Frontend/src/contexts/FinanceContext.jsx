@@ -12,6 +12,7 @@ export function FinanceProvider({ children }) {
     const [categories, setCategories] = useState([]);
     const [summary, setSummary] = useState(null);   // { totalIncome, totalExpenses, categoryBreakdown }
     const [aiInsight, setAiInsight] = useState('');
+    const [isSpeaking, setIsSpeaking] = useState(false);
     const [loading, setLoading] = useState(false);
     const [hasData, setHasData] = useState(false);
 
@@ -83,8 +84,14 @@ export function FinanceProvider({ children }) {
             // Auto-speak on first arrival
             if (advice) {
                 window.speechSynthesis.cancel();
+                setIsSpeaking(false);
                 const utterance = new SpeechSynthesisUtterance(advice);
                 utterance.rate = 1.1;
+                
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                utterance.onerror = () => setIsSpeaking(false);
+                
                 window.speechSynthesis.speak(utterance);
             }
 
@@ -118,6 +125,10 @@ export function FinanceProvider({ children }) {
                 const voices = window.speechSynthesis.getVoices();
                 const preferredVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google'));
                 if (preferredVoice) utterance.voice = preferredVoice;
+
+                utterance.onstart = () => setIsSpeaking(true);
+                utterance.onend = () => setIsSpeaking(false);
+                utterance.onerror = () => setIsSpeaking(false);
 
                 window.speechSynthesis.speak(utterance);
             }
@@ -163,6 +174,7 @@ export function FinanceProvider({ children }) {
     const stopVoice = useCallback(() => {
         if ('speechSynthesis' in window) {
             window.speechSynthesis.cancel();
+            setIsSpeaking(false);
         }
     }, []);
 
@@ -182,6 +194,7 @@ export function FinanceProvider({ children }) {
         loadDashboardData,
         clearData,
         stopVoice,
+        isSpeaking,
     };
 
     return (

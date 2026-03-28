@@ -4,6 +4,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import { useFinance } from '@/hooks/useFinance';
 import GlassCard from '@/components/Cards/GlassCard';
 import Loader from '@/components/common/Loader';
@@ -11,7 +12,7 @@ import './ChatPage.css';
 
 export default function ChatPage() {
     const navigate = useNavigate();
-    const { aiInsight, hasData, fetchChat, stopVoice } = useFinance();
+    const { aiInsight, hasData, fetchChat, stopVoice, isSpeaking } = useFinance();
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -85,13 +86,19 @@ export default function ChatPage() {
         <div className="chat-page">
             <div className="chat-header">
                 <p className="chat-eyebrow">AI Advisor</p>
-                <h1 className="chat-title">Chat with <em>FinPilot</em></h1>
+                <h1 className="chat-title">Chat with <em>Gravity</em></h1>
             </div>
 
             {/* AI Advisor Chat Board */}
             <GlassCard style={{ padding: '32px' }}>
-                <div className="dash-ai-header" style={{ marginBottom: '16px' }}>
+                <div className="dash-ai-header" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span className="dash-ai-badge">🤖 Voice & Text Chat</span>
+                    {isSpeaking && (
+                        <div className="speaking-indicator">
+                            <div className="speaking-orb"></div>
+                            <span className="speaking-text" style={{ fontSize: '0.75rem', color: 'var(--sage)', marginLeft: '8px' }}>Gravity is speaking...</span>
+                        </div>
+                    )}
                 </div>
 
                 <div className="insights-result" style={{ minHeight: '160px' }}>
@@ -100,9 +107,11 @@ export default function ChatPage() {
                             <Loader text={isRecording ? "Listening..." : "Thinking..."} />
                         </div>
                     ) : aiInsight ? (
-                        <p className="insights-advice-text">{aiInsight}</p>
+                        <div className="insights-advice-text markdown-body">
+                            <ReactMarkdown>{aiInsight}</ReactMarkdown>
+                        </div>
                     ) : (
-                        <p className="insights-empty-text">Hi! I'm your AI financial advisor. Ask me anything about your spending.</p>
+                        <p className="insights-empty-text">Hi! I'm Gravity, your high-performance AI financial mentor. Ask me anything about your spending.</p>
                     )}
                 </div>
 

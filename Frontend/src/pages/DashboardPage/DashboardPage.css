@@ -382,3 +382,53 @@
         align-items: flex-start;
     }
 }
+
+/* ── Speaking Indicator ── */
+.speaking-indicator {
+    display: flex;
+    align-items: center;
+    background: rgba(143, 168, 145, 0.1);
+    padding: 6px 12px;
+    border-radius: 20px;
+    border: 1px solid rgba(143, 168, 145, 0.2);
+}
+
+.speaking-orb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--sage);
+    box-shadow: 0 0 8px var(--sage);
+    animation: orb-pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes orb-pulse {
+    0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(143, 168, 145, 0.7); }
+    70% { transform: scale(1.2); box-shadow: 0 0 0 6px rgba(143, 168, 145, 0); }
+    100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(143, 168, 145, 0); }
+}
+
+/* Markdown styling overrides inside AI Insights */
+.markdown-body {
+    font-family: var(--font-body);
+}
+
+.markdown-body p {
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.markdown-body strong {
+    color: var(--charcoal);
+    font-weight: 500;
+}
+
+.markdown-body ul {
+    margin-left: 20px;
+    margin-bottom: 12px;
+    list-style-type: disc;
+}
+
+.markdown-body li {
+    margin-bottom: 6px;
+}
