@@ -4,6 +4,7 @@
 
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 import { useFinance } from '@/hooks/useFinance';
 import { useAuth } from '@/hooks/useAuth';
 import GlassCard from '@/components/Cards/GlassCard';
@@ -17,6 +18,7 @@ export default function DashboardPage() {
     const {
         transactions, summary, aiInsight, categories,
         loading, hasData, loadDashboardData, fetchAIInsights,
+        isSpeaking, stopVoice
     } = useFinance();
 
     const [aiLoading, setAiLoading] = useState(false);
@@ -79,6 +81,12 @@ export default function DashboardPage() {
                     </h1>
                 </div>
                 <div className="dash-header-actions">
+                    <button className="dash-action-btn dash-action-secondary" onClick={() => alert('Bank Link coming soon in V2!')}>
+                        🔗 Link Bank Account
+                    </button>
+                    <button className="dash-action-btn dash-action-secondary" onClick={() => alert('Family accounts coming soon in V2!')}>
+                        👨‍👩‍👦 Add Group Accounts
+                    </button>
                     <button className="dash-action-btn" onClick={() => navigate('/upload')}>
                         + New Upload
                     </button>
@@ -105,12 +113,22 @@ export default function DashboardPage() {
                 <div className="dash-right">
                     {/* AI Insight */}
                     <GlassCard className="dash-ai-card">
-                        <div className="dash-ai-header">
+                        <div className="dash-ai-header" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                             <span className="dash-ai-badge">🤖 AI Insight</span>
+                            {isSpeaking && (
+                                <div className="speaking-indicator" onClick={stopVoice} style={{ cursor: 'pointer' }} title="Stop speaking">
+                                    <div className="speaking-orb"></div>
+                                    <span className="speaking-text" style={{ fontSize: '0.75rem', color: 'var(--sage)', marginLeft: '8px' }}>Speaking... (Click to stop)</span>
+                                </div>
+                            )}
                         </div>
-                        <p className="dash-ai-text">
-                            {aiInsight || 'Click below to get personalized AI-powered financial advice.'}
-                        </p>
+                        <div className="dash-ai-text markdown-body">
+                            {aiInsight ? (
+                                <ReactMarkdown>{aiInsight}</ReactMarkdown>
+                            ) : (
+                                'Click below to get personalized AI-powered financial advice.'
+                            )}
+                        </div>
                         <div style={{ display: 'flex', gap: '10px' }}>
                             {!aiInsight ? (
                                 <button
