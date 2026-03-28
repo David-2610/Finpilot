@@ -1,5 +1,5 @@
 /* ============================================================
-   UploadPage Styles
+   UploadPage Styles — CSV Upload
    ============================================================ */
 
 .upload-page {
@@ -68,46 +68,127 @@
     color: var(--charcoal);
 }
 
-.upload-sample-btn {
-    font-family: var(--font-body);
-    font-size: 0.78rem;
-    color: var(--sage);
-    background: rgba(143, 168, 145, 0.08);
-    border: 1px solid rgba(143, 168, 145, 0.2);
-    border-radius: 8px;
-    padding: 6px 14px;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-.upload-sample-btn:hover {
-    background: rgba(143, 168, 145, 0.15);
-    border-color: var(--sage);
-}
-
-.upload-textarea {
+/* ─── Drop Zone ─── */
+.upload-dropzone {
     width: 100%;
-    padding: 16px;
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--charcoal);
-    background: rgba(255, 255, 255, 0.55);
-    border: 1px solid rgba(107, 125, 138, 0.2);
-    border-radius: 12px;
-    outline: none;
-    resize: vertical;
-    line-height: 1.6;
+    min-height: 200px;
+    border: 2px dashed rgba(107, 125, 138, 0.25);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
     transition: all 0.3s ease;
+    padding: 32px;
 }
 
-.upload-textarea:focus {
-    background: rgba(255, 255, 255, 0.82);
+.upload-dropzone:hover {
     border-color: var(--sage);
-    box-shadow: 0 0 0 3px rgba(143, 168, 145, 0.1);
+    background: rgba(143, 168, 145, 0.04);
 }
 
-.upload-textarea::placeholder {
-    color: rgba(107, 125, 138, 0.45);
+.upload-dropzone--active {
+    border-color: var(--sage);
+    background: rgba(143, 168, 145, 0.08);
+    border-style: solid;
+    transform: scale(1.01);
+}
+
+.upload-dropzone--has-file {
+    border-color: var(--sage);
+    border-style: solid;
+    background: rgba(143, 168, 145, 0.04);
+    min-height: auto;
+}
+
+.upload-drop-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    text-align: center;
+}
+
+.upload-drop-icon {
+    font-size: 2.8rem;
+    opacity: 0.9;
+}
+
+.upload-drop-text {
+    font-size: 0.9rem;
+    color: var(--soft-charcoal);
+    line-height: 1.5;
+}
+
+.upload-drop-text strong {
+    color: var(--charcoal);
+}
+
+.upload-drop-hint {
+    font-size: 0.72rem;
+    color: var(--slate);
+}
+
+/* File info */
+.upload-file-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+}
+
+.upload-file-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+}
+
+.upload-file-name {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--charcoal);
+    word-break: break-all;
+}
+
+.upload-file-size {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--slate);
+    margin-top: 2px;
+}
+
+.upload-file-remove {
+    margin-left: auto;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid rgba(185, 122, 110, 0.3);
+    background: rgba(185, 122, 110, 0.06);
+    color: var(--error);
+    font-size: 0.75rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.upload-file-remove:hover {
+    background: rgba(185, 122, 110, 0.15);
+    border-color: var(--error);
+}
+
+/* Success message */
+.upload-success-msg {
+    font-size: 0.85rem;
+    color: var(--success);
+    background: rgba(122, 171, 138, 0.08);
+    border: 1px solid rgba(122, 171, 138, 0.2);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 12px;
+    text-align: center;
 }
 
 .upload-error {
@@ -168,14 +249,6 @@
     margin-top: 10px;
     font-size: 0.72rem;
     color: var(--slate);
-}
-
-.upload-format-hint code {
-    font-family: var(--font-mono);
-    background: rgba(143, 168, 145, 0.08);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.68rem;
 }
 
 /* Info stack */

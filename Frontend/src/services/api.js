@@ -3,40 +3,71 @@
    ──────────────────────────────────────────────── */
 
 import axios from 'axios';
-import { API_BASE } from '@/utils/constants';
+
+const API_BASE = import.meta.env.VITE_API_BASE || '';
 
 const client = axios.create({
     baseURL: API_BASE,
     timeout: 30000,
-    headers: { 'Content-Type': 'application/json' },
 });
 
-/* ─── Health ─── */
-export const getHealth = () =>
-    client.get('/health').then((r) => r.data);
+/* ── Interceptor: attach Bearer token to every request ── */
+client.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem('fp_user') || 'null');
+    if (user?.token) {
+        config.headers.Authorization = `Bearer ${user.token}`;
+    }
+    return config;
+});
+
+/* ── Interceptor: handle 401 → clear auth ── */
+client.interceptors.response.use(
+    (res) => res,
+    (err) => {
+        if (err.response?.status === 401) {
+            localStorage.removeItem('fp_user');
+            window.location.href = '/login';
+        }
+        return Promise.reject(err);
+    }
+);
 
 /* ─── Auth ─── */
-export const getAuthMessage = () =>
-    client.get('/auth/message').then((r) => r.data);
+export const registerUser = (name, email, password) =>
+    client.post('/api/auth/register', { name, email, password }).then((r) => r.data);
 
-export const verifyWallet = (address, signature) =>
-    client.post('/auth/verify', { address, signature }).then((r) => r.data);
+export const loginUser = (email, password) =>
+    client.post('/api/auth/login', { email, password }).then((r) => r.data);
 
-/* ─── Data / IPFS ─── */
-export const storeData = (transactions, wallet) =>
-    client.post('/data/store', { transactions, wallet }).then((r) => r.data);
+/* ─── Transactions ─── */
+export const uploadCSV = (file) => {
+    const formData = new FormData();
+    formData.append('statement', file);
+    return client.post('/api/transactions/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    }).then((r) => r.data);
+};
 
-export const getData = (hash) =>
-    client.get(`/data/${hash}`).then((r) => r.data);
+export const getTransactions = () =>
+    client.get('/api/transactions').then((r) => r.data);
 
-/* ─── Analysis ─── */
-export const analyzeTransactions = (transactions) =>
-    client.post('/analyze', { transactions }).then((r) => r.data);
+export const updateTransaction = (id, data) =>
+    client.patch(`/api/transactions/${id}`, data).then((r) => r.data);
 
-/* ─── Chat ─── */
-export const chat = (message, data = null, alerts = null) =>
-    client.post('/chat', { message, data, alerts }).then((r) => r.data);
+/* ─── Categories ─── */
+export const getCategories = () =>
+    client.get('/api/categories').then((r) => r.data);
 
-/* ─── Full pipeline ─── */
-export const processAll = (wallet, transactions) =>
-    client.post('/process', { wallet, transactions }).then((r) => r.data);
+export const createCategory = (name, icon) =>
+    client.post('/api/categories', { name, icon }).then((r) => r.data);
+
+export const deleteCategory = (id) =>
+    client.delete(`/api/categories/${id}`).then((r) => r.data);
+
+/* ─── Summary ─── */
+export const getSummary = () =>
+    client.get('/api/summary').then((r) => r.data);
+
+/* ─── AI Insights ─── */
+export const getAIInsights = (summaryData) =>
+    client.post('/api/ai/insights', summaryData).then((r) => r.data);

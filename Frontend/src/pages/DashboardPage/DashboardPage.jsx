@@ -1,21 +1,47 @@
 /* ────────────────────────────────────────────────
-   DashboardPage — spending breakdown, alerts, AI
+   DashboardPage — summary, categories, transactions, AI
    ──────────────────────────────────────────────── */
 
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFinance } from '@/hooks/useFinance';
+import { useAuth } from '@/hooks/useAuth';
 import GlassCard from '@/components/Cards/GlassCard';
 import StatCard from '@/components/Cards/StatCard';
-import AlertCard from '@/components/Cards/AlertCard';
 import SpendingBar from '@/components/Charts/SpendingBar';
 import './DashboardPage.css';
 
 export default function DashboardPage() {
     const navigate = useNavigate();
+    const { user } = useAuth();
     const {
-        totals, alerts, summary, aiInsight, reply,
-        ipfsHash, achievements, hasData, clearData,
+        transactions, summary, aiInsight, categories,
+        loading, hasData, loadDashboardData, fetchAIInsights,
     } = useFinance();
+
+    const [aiLoading, setAiLoading] = useState(false);
+
+    useEffect(() => {
+        loadDashboardData();
+    }, [loadDashboardData]);
+
+    async function handleGetInsights() {
+        if (!summary) return;
+        setAiLoading(true);
+        try {
+            await fetchAIInsights(summary);
+        } catch { /* silently fail */ }
+        setAiLoading(false);
+    }
+
+    if (loading) {
+        return (
+            <div className="dash-empty">
+                <div className="dash-empty-icon">⏳</div>
+                <h2 className="dash-empty-title">Loading your data…</h2>
+            </div>
+        );
+    }
 
     if (!hasData) {
         return (
@@ -23,19 +49,24 @@ export default function DashboardPage() {
                 <div className="dash-empty-icon">📊</div>
                 <h2 className="dash-empty-title">No data yet</h2>
                 <p className="dash-empty-desc">
-                    Upload your transactions to see your financial dashboard.
+                    Upload your bank statement to see your financial dashboard.
                 </p>
                 <button className="dash-empty-btn" onClick={() => navigate('/upload')}>
-                    Upload Transactions →
+                    Upload Statement →
                 </button>
             </div>
         );
     }
 
-    const totalSpending = summary?.totalSpending || Object.values(totals).reduce((s, v) => s + v, 0);
-    const categoryCount = summary?.categories || Object.keys(totals).length;
-    const txnCount = summary?.totalTransactions || 0;
-    const topCategory = summary?.topCategory;
+    const totalIncome = summary?.totalIncome || 0;
+    const totalExpenses = summary?.totalExpenses || 0;
+    const savings = totalIncome - totalExpenses;
+    const savingsRate = totalIncome > 0 ? ((savings / totalIncome) * 100).toFixed(1) : 0;
+    const categoryBreakdown = summary?.categoryBreakdown || [];
+    const topCategory = categoryBreakdown.length > 0
+        ? categoryBreakdown.reduce((max, c) => c.amount > max.amount ? c : max, categoryBreakdown[0])
+        : null;
+    const recentTxns = transactions.slice(0, 10);
 
     return (
         <div className="dash-page">
@@ -43,32 +74,31 @@ export default function DashboardPage() {
             <div className="dash-header">
                 <div>
                     <p className="dash-eyebrow">Financial Dashboard</p>
-                    <h1 className="dash-title">Your money, <em>decoded</em></h1>
+                    <h1 className="dash-title">
+                        Welcome back, <em>{user?.name?.split(' ')[0] || 'there'}</em>
+                    </h1>
                 </div>
                 <div className="dash-header-actions">
                     <button className="dash-action-btn" onClick={() => navigate('/upload')}>
                         + New Upload
-                    </button>
-                    <button className="dash-action-btn dash-action-secondary" onClick={clearData}>
-                        Clear Data
                     </button>
                 </div>
             </div>
 
             {/* Stats row */}
             <div className="dash-stats-row">
-                <StatCard icon="💰" value={`₹${totalSpending.toLocaleString('en-IN')}`} label="Total Spending" accentClass="icon-sage" />
-                <StatCard icon="📂" value={categoryCount} label="Categories" accentClass="icon-dusk" />
-                <StatCard icon="📋" value={txnCount} label="Transactions" accentClass="icon-gold" />
-                <StatCard icon="⚠️" value={alerts.length} label="Alerts" accentClass="icon-blush" />
+                <StatCard icon="💰" value={`₹${totalIncome.toLocaleString('en-IN')}`} label="Total Income" accentClass="icon-sage" />
+                <StatCard icon="💸" value={`₹${totalExpenses.toLocaleString('en-IN')}`} label="Total Expenses" accentClass="icon-blush" />
+                <StatCard icon="📈" value={`${savingsRate}%`} label="Savings Rate" accentClass="icon-dusk" />
+                <StatCard icon="📋" value={transactions.length} label="Transactions" accentClass="icon-gold" />
             </div>
 
             {/* Main grid */}
             <div className="dash-grid">
                 {/* Spending breakdown */}
                 <GlassCard className="dash-spending-card">
-                    <h3 className="dash-card-title">Spending Breakdown</h3>
-                    <SpendingBar totals={totals} />
+                    <h3 className="dash-card-title">Spending by Category</h3>
+                    <SpendingBar categoryBreakdown={categoryBreakdown} />
                 </GlassCard>
 
                 {/* Right column */}
@@ -78,57 +108,90 @@ export default function DashboardPage() {
                         <div className="dash-ai-header">
                             <span className="dash-ai-badge">🤖 AI Insight</span>
                         </div>
-                        <p className="dash-ai-text">{aiInsight || reply || 'No AI insight available.'}</p>
-                        <button className="dash-ai-chat-btn" onClick={() => navigate('/chat')}>
-                            💬 Ask follow-up
-                        </button>
+                        <p className="dash-ai-text">
+                            {aiInsight || 'Click below to get personalized AI-powered financial advice.'}
+                        </p>
+                        {!aiInsight && (
+                            <button
+                                className="dash-ai-chat-btn"
+                                onClick={handleGetInsights}
+                                disabled={aiLoading}
+                            >
+                                {aiLoading ? '⏳ Generating…' : '🤖 Get AI Insights'}
+                            </button>
+                        )}
+                        {aiInsight && (
+                            <button className="dash-ai-chat-btn" onClick={() => navigate('/insights')}>
+                                💬 View Full Insights
+                            </button>
+                        )}
                     </GlassCard>
 
                     {/* Top Category */}
                     {topCategory && (
                         <GlassCard className="dash-top-card">
                             <p className="dash-top-label">Top Spending Category</p>
-                            <h3 className="dash-top-value">{topCategory[0]}</h3>
-                            <p className="dash-top-amount">₹{topCategory[1]?.toLocaleString('en-IN')}</p>
+                            <h3 className="dash-top-value">{topCategory.categoryName}</h3>
+                            <p className="dash-top-amount">₹{topCategory.amount?.toLocaleString('en-IN')}</p>
                         </GlassCard>
                     )}
 
-                    {/* IPFS Hash */}
-                    {ipfsHash && (
-                        <GlassCard className="dash-ipfs-card">
-                            <p className="dash-ipfs-label">📦 IPFS Hash</p>
-                            <code className="dash-ipfs-hash">{ipfsHash}</code>
-                        </GlassCard>
-                    )}
+                    {/* Savings */}
+                    <GlassCard className="dash-savings-card">
+                        <p className="dash-top-label">Net Savings</p>
+                        <h3 className="dash-top-value" style={{ color: savings >= 0 ? 'var(--success)' : 'var(--error)' }}>
+                            {savings >= 0 ? '+' : ''}₹{Math.abs(savings).toLocaleString('en-IN')}
+                        </h3>
+                        <p className="dash-top-amount">{savings >= 0 ? 'You saved this period!' : 'You overspent this period'}</p>
+                    </GlassCard>
                 </div>
             </div>
 
-            {/* Alerts section */}
-            {alerts.length > 0 && (
-                <div className="dash-alerts-section">
-                    <h3 className="dash-section-title">
-                        <span>⚠️</span> Active Alerts ({alerts.length})
-                    </h3>
-                    <div className="dash-alerts-grid">
-                        {alerts.map((alert, i) => (
-                            <AlertCard key={i} alert={alert} showChatLink />
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Achievements */}
-            {achievements && achievements.earned > 0 && (
-                <GlassCard className="dash-achievements">
-                    <h3 className="dash-section-title">🏆 Achievements Earned</h3>
-                    <div className="dash-achieve-stats">
-                        <div className="dash-achieve-num">{achievements.earned}</div>
-                        <div className="dash-achieve-label">
-                            new achievement{achievements.earned > 1 ? 's' : ''} earned
-                            {achievements.total > 0 && ` · ${achievements.total} total`}
+            {/* Recent Transactions */}
+            {recentTxns.length > 0 && (
+                <div className="dash-txn-section">
+                    <h3 className="dash-section-title">📋 Recent Transactions</h3>
+                    <GlassCard className="dash-txn-card">
+                        <div className="dash-txn-table-wrap">
+                            <table className="dash-txn-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {recentTxns.map((txn) => (
+                                        <tr key={txn._id}>
+                                            <td className="dash-txn-date">
+                                                {new Date(txn.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })}
+                                            </td>
+                                            <td className="dash-txn-desc">
+                                                {txn.merchant || txn.counterparty || txn.rawDescription?.substring(0, 40)}
+                                            </td>
+                                            <td>
+                                                <span className="dash-txn-category">
+                                                    {txn.categoryId?.icon || '📂'} {txn.categoryId?.name || 'Uncategorized'}
+                                                </span>
+                                            </td>
+                                            <td className={`dash-txn-amount ${txn.type === 'credit' ? 'dash-txn-credit' : 'dash-txn-debit'}`}>
+                                                {txn.type === 'credit' ? '+' : '-'}₹{txn.amount?.toLocaleString('en-IN')}
+                                            </td>
+                                            <td>
+                                                <span className={`dash-txn-type-badge ${txn.type === 'credit' ? 'dash-txn-type-credit' : 'dash-txn-type-debit'}`}>
+                                                    {txn.type}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                </GlassCard>
+                    </GlassCard>
+                </div>
             )}
         </div>
     );
