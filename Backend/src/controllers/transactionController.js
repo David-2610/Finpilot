@@ -89,13 +89,30 @@ const updateTransaction = async (req, res) => {
     const updatedTxn = await transaction.save();
 
     // 2. SMART BULK UPDATE:
-    // Apply this category change to ALL future and existing transactions 
-    // from the same vendor/details for this user.
-    if (categoryId && transaction.details) {
+    // Apply this category change to ALL transactions from the same MERCHANT 
+    // for this user. This ensures that if you re-categorize "Zepto", 
+    // all Zepto transactions shift globally.
+    if (categoryId && transaction.merchant && transaction.merchant !== 'Other') {
       await Transaction.updateMany(
         { 
           userId: req.user._id, 
-          details: transaction.details 
+          merchant: transaction.merchant 
+        },
+        { 
+          $set: { 
+            categoryId: categoryId,
+            subcategoryId: subcategoryId || null,
+            isAutoCategorized: false 
+          } 
+        }
+      );
+    } 
+    // Fallback: If no merchant name was extracted, still update by rawDescription
+    else if (categoryId && transaction.rawDescription) {
+      await Transaction.updateMany(
+        { 
+          userId: req.user._id, 
+          rawDescription: transaction.rawDescription 
         },
         { 
           $set: { 

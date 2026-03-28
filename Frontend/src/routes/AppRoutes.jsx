@@ -11,6 +11,7 @@ import UploadPage from '@/pages/UploadPage/UploadPage';
 import DashboardPage from '@/pages/DashboardPage/DashboardPage';
 import ChatPage from '@/pages/ChatPage/ChatPage';
 import AlertsPage from '@/pages/AlertsPage/AlertsPage';
+import TransactionsPage from '@/pages/TransactionsPage/TransactionsPage';
 
 function ProtectedRoute({ children }) {
     const { isAuthenticated, loading } = useAuth();
@@ -50,6 +51,7 @@ export default function AppRoutes() {
                     <Route path="/dashboard" element={<DashboardPage />} />
                     <Route path="/upload" element={<UploadPage />} />
                     <Route path="/insights" element={<ChatPage />} />
+                    <Route path="/transactions" element={<TransactionsPage />} />
                     <Route path="/alerts" element={<AlertsPage />} />
                 </Route>
 

@@ -159,6 +159,13 @@ export function FinanceProvider({ children }) {
         setHasData(false);
     }, []);
 
+    /* ── Stop Speech Synthesis ── */
+    const stopVoice = useCallback(() => {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+        }
+    }, []);
+
     const value = {
         transactions,
         categories,
@@ -174,6 +181,7 @@ export function FinanceProvider({ children }) {
         fetchChat,
         loadDashboardData,
         clearData,
+        stopVoice,
     };
 
     return (

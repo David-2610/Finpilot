@@ -111,20 +111,29 @@ export default function DashboardPage() {
                         <p className="dash-ai-text">
                             {aiInsight || 'Click below to get personalized AI-powered financial advice.'}
                         </p>
-                        {!aiInsight && (
-                            <button
-                                className="dash-ai-chat-btn"
-                                onClick={handleGetInsights}
-                                disabled={aiLoading}
-                            >
-                                {aiLoading ? '⏳ Generating…' : '🤖 Get AI Insights'}
-                            </button>
-                        )}
-                        {aiInsight && (
+                        <div style={{ display: 'flex', gap: '10px' }}>
+                            {!aiInsight ? (
+                                <button
+                                    className="dash-ai-chat-btn"
+                                    onClick={handleGetInsights}
+                                    disabled={aiLoading}
+                                >
+                                    {aiLoading ? '⏳ Generating…' : '✨ Generate AI Insights'}
+                                </button>
+                            ) : (
+                                <button
+                                    className="dash-ai-chat-btn dash-action-secondary"
+                                    onClick={handleGetInsights}
+                                    disabled={aiLoading}
+                                >
+                                    {aiLoading ? '⏳ Regenerating…' : '↻ Regenerate Insights'}
+                                </button>
+                            )}
+
                             <button className="dash-ai-chat-btn" onClick={() => navigate('/insights')}>
-                                💬 View Full Insights
+                                💬 Go to Chatbot
                             </button>
-                        )}
+                        </div>
                     </GlassCard>
 
                     {/* Top Category */}

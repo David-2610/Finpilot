@@ -1,8 +1,8 @@
 /* ────────────────────────────────────────────────
-   AI Insights Page — Gemini-powered financial advice
+   AI Chat Page — Voice and Text interface
    ──────────────────────────────────────────────── */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFinance } from '@/hooks/useFinance';
 import GlassCard from '@/components/Cards/GlassCard';
@@ -11,45 +11,12 @@ import './ChatPage.css';
 
 export default function ChatPage() {
     const navigate = useNavigate();
-    const { summary, aiInsight, hasData, fetchSummary, fetchAIInsights, fetchChat, loading } = useFinance();
+    const { aiInsight, hasData, fetchChat, stopVoice } = useFinance();
     const [isLoading, setIsLoading] = useState(false);
     const [isRecording, setIsRecording] = useState(false);
     const [mediaRecorder, setMediaRecorder] = useState(null);
     const [userInput, setUserInput] = useState('');
     const [error, setError] = useState('');
-
-    const initInsights = useCallback(async () => {
-        if (hasData) {
-            let currentSummary = summary;
-            if (!currentSummary) {
-                setIsLoading(true);
-                currentSummary = await fetchSummary();
-            }
-            if (currentSummary && !aiInsight) {
-                setIsLoading(true);
-                await fetchAIInsights(currentSummary);
-                setIsLoading(false);
-            }
-        }
-    }, [hasData, summary, aiInsight, fetchSummary, fetchAIInsights]);
-
-    // 1. Auto-fetch and Auto-insights on mount
-    useEffect(() => {
-        initInsights();
-    }, [initInsights]);
-
-    // Handle standard generate (Refresh)
-    async function handleRefreshInsights() {
-        setError('');
-        setIsLoading(true);
-        try {
-            const sum = await fetchSummary();
-            await fetchAIInsights(sum);
-        } catch (err) {
-            setError(err.message || 'Failed to refresh insights');
-        }
-        setIsLoading(false);
-    }
 
     // --- Voice Logic (Hold to speak) ---
     async function startRecording() {
@@ -105,7 +72,7 @@ export default function ChatPage() {
                 <div className="dash-empty-icon">🤖</div>
                 <h2 className="dash-empty-title">No data yet</h2>
                 <p className="dash-empty-desc">
-                    Upload your bank statement first to get personalized AI financial advice.
+                    Upload your bank statement first to chat with the AI financial advisor.
                 </p>
                 <button className="dash-empty-btn" onClick={() => navigate('/upload')}>
                     Upload Statement →
@@ -117,81 +84,29 @@ export default function ChatPage() {
     return (
         <div className="chat-page">
             <div className="chat-header">
-                <p className="chat-eyebrow">AI Financial Advisor</p>
-                <h1 className="chat-title">Insights from <em>FinPilot</em></h1>
+                <p className="chat-eyebrow">AI Advisor</p>
+                <h1 className="chat-title">Chat with <em>FinPilot</em></h1>
             </div>
-
-            {/* Summary overview */}
-            {summary && (
-                <GlassCard className="insights-summary-card" style={{ marginBottom: '24px', padding: '28px' }}>
-                    <h3 className="dash-card-title">📊 Your Financial Summary</h3>
-                    <div className="insights-stats-grid">
-                        <div className="insights-stat">
-                            <span className="insights-stat-value insights-credit">
-                                ₹{summary.totalIncome?.toLocaleString('en-IN') || '0'}
-                            </span>
-                            <span className="insights-stat-label">Total Income</span>
-                        </div>
-                        <div className="insights-stat">
-                            <span className="insights-stat-value insights-debit">
-                                ₹{summary.totalExpenses?.toLocaleString('en-IN') || '0'}
-                            </span>
-                            <span className="insights-stat-label">Total Expenses</span>
-                        </div>
-                        <div className="insights-stat">
-                            <span className="insights-stat-value" style={{
-                                color: (summary.totalIncome - summary.totalExpenses) >= 0 ? 'var(--success)' : 'var(--error)'
-                            }}>
-                                ₹{Math.abs(summary.totalIncome - summary.totalExpenses).toLocaleString('en-IN')}
-                            </span>
-                            <span className="insights-stat-label">
-                                {(summary.totalIncome - summary.totalExpenses) >= 0 ? 'Net Savings' : 'Net Deficit'}
-                            </span>
-                        </div>
-                        <div className="insights-stat">
-                            <span className="insights-stat-value">
-                                {summary.categoryBreakdown?.length || 0}
-                            </span>
-                            <span className="insights-stat-label">Categories</span>
-                        </div>
-                    </div>
-
-                    {/* Category breakdown */}
-                    {summary.categoryBreakdown?.length > 0 && (
-                        <div className="insights-categories">
-                            <h4 className="insights-cat-title">Category Breakdown</h4>
-                            <div className="insights-cat-list">
-                                {summary.categoryBreakdown.map((cat, i) => (
-                                    <div className="insights-cat-item" key={cat.categoryId || i}>
-                                        <span className="insights-cat-name">{cat.categoryName}</span>
-                                        <span className="insights-cat-amount">₹{cat.amount?.toLocaleString('en-IN')}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-                </GlassCard>
-            )}
 
             {/* AI Advisor Chat Board */}
             <GlassCard style={{ padding: '32px' }}>
                 <div className="dash-ai-header" style={{ marginBottom: '16px' }}>
-                    <span className="dash-ai-badge">🤖 AI Advisor Chat</span>
+                    <span className="dash-ai-badge">🤖 Voice & Text Chat</span>
                 </div>
 
-                <div className="insights-result" style={{ minHeight: '120px' }}>
+                <div className="insights-result" style={{ minHeight: '160px' }}>
                     {isLoading ? (
-                        <div style={{ padding: '20px 0', textAlign: 'center' }}>
+                        <div style={{ padding: '40px 0', textAlign: 'center' }}>
                             <Loader text={isRecording ? "Listening..." : "Thinking..."} />
                         </div>
                     ) : aiInsight ? (
                         <p className="insights-advice-text">{aiInsight}</p>
                     ) : (
-                        <p className="insights-empty-text">Ask me anything about your spending.</p>
+                        <p className="insights-empty-text">Hi! I'm your AI financial advisor. Ask me anything about your spending.</p>
                     )}
                 </div>
 
-                {/* New Chat Input Bar */}
+                {/* Chat Input Bar */}
                 <div className="chat-input-container">
                     <textarea 
                         className="chat-textarea"
@@ -202,6 +117,13 @@ export default function ChatPage() {
                         rows="1"
                     />
                     <div className="chat-input-actions">
+                        <button 
+                            className="chat-stop-btn"
+                            onClick={stopVoice}
+                            title="Stop AI Voice"
+                        >
+                            ⏹️
+                        </button>
                         <button 
                             className={`chat-mic-btn ${isRecording ? 'recording' : ''}`}
                             onMouseDown={startRecording}
@@ -222,12 +144,6 @@ export default function ChatPage() {
                 </div>
 
                 {error && <p className="upload-error" style={{ marginTop: '12px' }}>{error}</p>}
-                
-                <div className="insights-actions" style={{ marginTop: '16px' }}>
-                    <button className="insights-refresh-btn" onClick={handleRefreshInsights}>
-                        ↻ Refresh Analysis
-                    </button>
-                </div>
             </GlassCard>
         </div>
     );

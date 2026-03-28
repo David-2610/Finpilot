@@ -6,6 +6,7 @@ export const NAV_LINKS = [
     { path: '/dashboard', label: 'Dashboard', icon: '📊' },
     { path: '/upload', label: 'Upload', icon: '📤' },
     { path: '/insights', label: 'AI Insights', icon: '🤖' },
+    { path: '/transactions', label: 'Transactions', icon: '📜' },
     { path: '/alerts', label: 'Alerts', icon: '🔔' },
 ];
 
