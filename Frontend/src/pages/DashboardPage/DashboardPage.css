@@ -136,6 +136,8 @@
     line-height: 1.7;
     margin-bottom: 14px;
     white-space: pre-wrap;
+    max-height: 200px;
+    overflow-y: auto;
 }
 
 .dash-ai-chat-btn {
@@ -155,8 +157,14 @@
     border-color: var(--sage);
 }
 
-/* Top category */
-.dash-top-card {
+.dash-ai-chat-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Top category / Savings */
+.dash-top-card,
+.dash-savings-card {
     padding: 20px 24px !important;
 }
 
@@ -179,41 +187,12 @@
 
 .dash-top-amount {
     font-family: var(--font-mono);
-    font-size: 0.88rem;
+    font-size: 0.82rem;
     color: var(--sage);
     margin-top: 4px;
 }
 
-/* IPFS */
-.dash-ipfs-card {
-    padding: 18px 22px !important;
-}
-
-.dash-ipfs-label {
-    font-family: var(--font-mono);
-    font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--slate);
-    margin-bottom: 6px;
-}
-
-.dash-ipfs-hash {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    color: var(--soft-charcoal);
-    word-break: break-all;
-    background: rgba(143, 168, 145, 0.06);
-    padding: 6px 10px;
-    border-radius: 6px;
-    display: block;
-}
-
-/* Alerts section */
-.dash-alerts-section {
-    margin-bottom: 32px;
-}
-
+/* Section title */
 .dash-section-title {
     font-family: var(--font-heading);
     font-size: 1.15rem;
@@ -225,35 +204,117 @@
     gap: 8px;
 }
 
-.dash-alerts-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 16px;
+/* ─── Transactions Table ─── */
+.dash-txn-section {
+    margin-bottom: 32px;
 }
 
-/* Achievements */
-.dash-achievements {
-    padding: 28px !important;
+.dash-txn-card {
+    padding: 0 !important;
+    overflow: hidden;
 }
 
-.dash-achieve-stats {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    margin-top: 12px;
+.dash-txn-table-wrap {
+    overflow-x: auto;
 }
 
-.dash-achieve-num {
-    font-family: var(--font-heading);
-    font-size: 2.4rem;
-    font-weight: 300;
-    color: var(--sage);
+.dash-txn-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
 }
 
-.dash-achieve-label {
-    font-size: 0.85rem;
-    font-weight: 300;
+.dash-txn-table thead {
+    background: rgba(143, 168, 145, 0.06);
+}
+
+.dash-txn-table th {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(107, 125, 138, 0.1);
+}
+
+.dash-txn-table td {
+    padding: 12px 18px;
     color: var(--soft-charcoal);
+    border-bottom: 1px solid rgba(107, 125, 138, 0.06);
+    vertical-align: middle;
+}
+
+.dash-txn-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.dash-txn-table tbody tr:hover {
+    background: rgba(143, 168, 145, 0.03);
+}
+
+.dash-txn-date {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--slate);
+    white-space: nowrap;
+}
+
+.dash-txn-desc {
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 400;
+    color: var(--charcoal);
+}
+
+.dash-txn-category {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    background: rgba(143, 168, 145, 0.08);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
+}
+
+.dash-txn-amount {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.dash-txn-credit {
+    color: var(--success);
+}
+
+.dash-txn-debit {
+    color: var(--error);
+}
+
+.dash-txn-type-badge {
+    font-family: var(--font-mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.dash-txn-type-credit {
+    color: var(--success);
+    background: rgba(122, 171, 138, 0.1);
+}
+
+.dash-txn-type-debit {
+    color: var(--error);
+    background: rgba(185, 122, 110, 0.1);
 }
 
 /* Empty state */

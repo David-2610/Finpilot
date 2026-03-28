@@ -8,13 +8,8 @@ import { NAV_LINKS } from '@/utils/constants';
 import './Sidebar.css';
 
 export default function Sidebar() {
-    const { wallet, isAuthenticated, logout } = useAuth();
+    const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
-
-    function shortAddress(addr) {
-        if (!addr) return '';
-        return addr.slice(0, 6) + '…' + addr.slice(-4);
-    }
 
     function handleLogout() {
         logout();
@@ -45,16 +40,19 @@ export default function Sidebar() {
                 ))}
             </nav>
 
-            {/* Wallet Status */}
+            {/* User Status */}
             <div className="sidebar-footer">
-                {isAuthenticated && wallet ? (
+                {isAuthenticated && user ? (
                     <div className="sidebar-wallet">
                         <div className="wallet-status">
                             <span className="wallet-dot" />
-                            <span className="wallet-addr">{shortAddress(wallet)}</span>
+                            <div className="sidebar-user-info">
+                                <span className="sidebar-user-name">{user.name}</span>
+                                <span className="sidebar-user-email">{user.email}</span>
+                            </div>
                         </div>
                         <button className="sidebar-logout" onClick={handleLogout}>
-                            Disconnect
+                            Logout
                         </button>
                     </div>
                 ) : (
@@ -62,7 +60,7 @@ export default function Sidebar() {
                         className="sidebar-connect"
                         onClick={() => navigate('/login')}
                     >
-                        Connect Wallet
+                        Sign In
                     </button>
                 )}
             </div>

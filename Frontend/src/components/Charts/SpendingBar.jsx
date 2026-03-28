@@ -1,18 +1,13 @@
 /* ────────────────────────────────────────────────
-   SpendingBar — CSS bar chart for categories
+   SpendingBar — CSS bar chart for category breakdown
    ──────────────────────────────────────────────── */
 
+import { CATEGORY_COLORS } from '@/utils/constants';
 import './Charts.css';
 
-const CATEGORY_COLORS = [
-    'var(--sage)', 'var(--dusk)', 'var(--pale-gold)', 'var(--blush)',
-    'var(--mist)', 'var(--slate)', '#a59dd4', '#88b4a8',
-    '#c9a87a', '#8fa8b5', '#b5a08a',
-];
-
-export default function SpendingBar({ totals = {} }) {
-    const entries = Object.entries(totals).sort((a, b) => b[1] - a[1]);
-    const maxVal = entries.length > 0 ? entries[0][1] : 0;
+export default function SpendingBar({ categoryBreakdown = [] }) {
+    const entries = [...categoryBreakdown].sort((a, b) => b.amount - a.amount);
+    const maxVal = entries.length > 0 ? entries[0].amount : 0;
 
     if (entries.length === 0) {
         return (
@@ -24,20 +19,20 @@ export default function SpendingBar({ totals = {} }) {
 
     return (
         <div className="spending-bar-chart">
-            {entries.map(([category, amount], i) => (
-                <div className="spending-bar-row" key={category}>
-                    <div className="spending-bar-label">{category}</div>
+            {entries.map((cat, i) => (
+                <div className="spending-bar-row" key={cat.categoryId || cat.categoryName}>
+                    <div className="spending-bar-label">{cat.categoryName}</div>
                     <div className="spending-bar-track">
                         <div
                             className="spending-bar-fill"
                             style={{
-                                width: `${(amount / maxVal) * 100}%`,
+                                width: `${(cat.amount / maxVal) * 100}%`,
                                 background: CATEGORY_COLORS[i % CATEGORY_COLORS.length],
                                 animationDelay: `${i * 0.08}s`,
                             }}
                         />
                     </div>
-                    <div className="spending-bar-amount">₹{amount.toLocaleString('en-IN')}</div>
+                    <div className="spending-bar-amount">₹{cat.amount.toLocaleString('en-IN')}</div>
                 </div>
             ))}
         </div>
