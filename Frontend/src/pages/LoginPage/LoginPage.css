@@ -231,6 +231,13 @@
     animation: fadeIn 0.4s ease;
 }
 
+.login-logo-img {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 0px;
+}
+
 .login-state-label {
     font-family: var(--font-heading);
     font-size: 1.35rem;

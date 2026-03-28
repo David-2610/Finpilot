@@ -25,23 +25,20 @@
 .sidebar-logo {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 8px 12px;
-    margin-bottom: 32px;
+    gap: 12px;
+    margin-bottom: 0px;
     cursor: pointer;
-    font-family: var(--font-heading);
-    font-size: 1.35rem;
-    font-weight: 500;
-    color: var(--charcoal);
-    letter-spacing: 0.02em;
+    transition: transform 0.2s ease;
 }
 
-.sidebar-logo-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--sage);
-    animation: pulseDot 2.5s ease infinite;
+.sidebar-logo:hover {
+    transform: scale(1.02);
+}
+
+.sidebar-logo-img {
+    height: 75px;
+    width: auto;
+    object-fit: contain;
 }
 
 /* ─── Nav Links ─── */

@@ -54,6 +54,9 @@ export default function LandingPage() {
 
             {/* NAV */}
             <nav className="landing-nav">
+                <div className="landing-logo" onClick={() => navigate('/')}>
+                    <img src="/icons.svg" alt="FinPilot Logo" className="landing-logo-img" />
+                </div>
                 <div className="landing-nav-right">
                     <button className="btn-already" onClick={() => navigate('/login')}>
                         Already a user? →

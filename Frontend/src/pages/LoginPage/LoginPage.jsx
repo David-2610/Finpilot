@@ -64,8 +64,7 @@ export default function LoginPage() {
                 <aside className="login-info-panel">
                     <div className="login-info-inner">
                         <div className="login-logo">
-                            <div className="login-logo-dot" />
-                            FinPilot
+                            <img src="/icons.svg" alt="FinPilot Logo" className="login-logo-img" />
                         </div>
                         <h1 className="login-info-title">Your finances.<br /><em>Simplified.</em></h1>
                         <p className="login-info-desc">

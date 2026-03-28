@@ -20,8 +20,7 @@ export default function Sidebar() {
         <aside className="sidebar">
             {/* Logo */}
             <div className="sidebar-logo" onClick={() => navigate('/')}>
-                <div className="sidebar-logo-dot" />
-                <span>FinPilot</span>
+                <img src="/icons.svg" alt="FinPilot Logo" className="sidebar-logo-img" />
             </div>
 
             {/* Navigation */}
