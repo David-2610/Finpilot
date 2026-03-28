@@ -4,7 +4,7 @@ const multer = require('multer');
 const { uploadTransactions, getTransactions, updateTransaction } = require('../controllers/transactionController');
 const { protect } = require('../middlewares/authMiddleware');
 
-const upload = multer({ dest: 'uploads/' });
+const upload = multer({ dest: '/tmp/' });
 
 router.route('/')
   .get(protect, getTransactions);
